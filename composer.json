@@ -1,0 +1,23 @@
+{
+  "name": "zls/unit",
+  "description": "单元测试",
+  "type": "library",
+  "license": "MIT",
+  "minimum-stability": "dev",
+  "authors": [
+    {
+      "name": "影浅",
+      "email": "seekwe@gmail.com"
+    }
+  ],
+  "autoload": {
+    "psr-4": {
+      "Zls\\Unit\\": "src/"
+    },
+    "files": []
+  },
+  "require": {
+    "codedungeon/phpunit-result-printer": "^0.26",
+    "phpunit/phpunit": "^8.0"
+  }
+}
