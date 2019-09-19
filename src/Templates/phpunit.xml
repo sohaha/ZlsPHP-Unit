@@ -8,7 +8,6 @@
         convertErrorsToExceptions="true"
         convertNoticesToExceptions="true"
         convertWarningsToExceptions="true"
-        printerClass="Codedungeon\PHPUnitPrettyResultPrinter\Printer"
 >
   <testsuites>
     <testsuite name="Unit">
@@ -25,7 +24,6 @@
   </filter>
   <php>
     <ini name="error_log" value="phpunit_test.log"/>
-
     <const name="ZLS_UNIT" value="true"/>
   </php>
 </phpunit>
