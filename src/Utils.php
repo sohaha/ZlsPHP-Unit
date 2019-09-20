@@ -24,22 +24,55 @@ trait Utils
 
     public function get($url, $data = [], $header = [])
     {
-        return $this->request($url, $data, $header);
+        return $this->request('get', $url, $data, $header);
     }
-
 
     public function post($url, $data = [], $header = [], $atUpload = true)
     {
-        return $this->request($url, $data, $header, $atUpload);
+        return $this->request('post', $url, $data, $header, $atUpload);
     }
 
-    public function request($url, $data, $header, $atUpload = false)
+    public function put($url, $data = [], $header = [], $atUpload = true)
+    {
+        return $this->request('put', $url, $data, $header, $atUpload);
+    }
+
+    public function delete($url, $data = [], $header = [], $atUpload = true)
+    {
+        return $this->request('delete', $url, $data, $header, $atUpload);
+    }
+
+    public function getJSON($url, $data = [], $header = [])
+    {
+        return $this->requestJSON('get', $url, $data, $header);
+    }
+
+    public function postJSON($url, $data = [], $header = [], $atUpload = true)
+    {
+        return $this->requestJSON('post', $url, $data, $header, $atUpload);
+    }
+
+    public function putJSON($url, $data = [], $header = [], $atUpload = true)
+    {
+        return $this->requestJSON('put', $url, $data, $header, $atUpload);
+    }
+
+    public function deleteJSON($url, $data = [], $header = [], $atUpload = true)
+    {
+        return $this->requestJSON('delete', $url, $data, $header, $atUpload);
+    }
+
+    public function requestJSON($type, $url, $data, $header, $atUpload = false)
+    {
+        return $this->request($type, $url, $data, self::headerAjax($header), $atUpload);
+    }
+
+    public function request($type, $url, $data, $header, $atUpload = false)
     {
         if (!Z::checkValue($url, 'url')) {
             $url = TEST_HOST . $url;
         }
-
-        return Z::tap($this->result($this->http->request('post', $url, $data, $header, 0, null, true, $atUpload)), function ($res) {
+        return Z::tap($this->result($this->http->request($type, $url, $data, $header, 0, null, true, $atUpload)), function ($res) {
 
         });
     }
@@ -51,7 +84,7 @@ trait Utils
             if (TEST_HOST && Z::strBeginsWith(Z::arrayGet($info, 'url'), TEST_HOST)) {
                 $parse = parse_url(TEST_HOST);
                 $this->printStrN();
-                $this->error('Please start service(' . TEST_HOST . ') first,execute the test');
+                $this->error('Please start service( ' . TEST_HOST . ' ) first,execute the test');
                 if (in_array(z::arrayGet($parse, 'host'), ["127.0.0.1", "localhost"])) {
                     $port = Z::arrayGet($parse, 'port', 80);
                     $this->printStr('Start command: ');
@@ -89,5 +122,10 @@ trait Utils
 
         // $this->printStrN("Command: {$command}");
         return Z::command($command);
+    }
+
+    private static function headerAjax(array $header): array
+    {
+        return $header + ['X-Requested-With: XMLHttpRequest'];
     }
 }
