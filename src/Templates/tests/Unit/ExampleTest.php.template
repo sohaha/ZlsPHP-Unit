@@ -3,15 +3,28 @@
 namespace Tests\Unit;
 
 use PHPUnit\Framework\TestCase as BaseTestCase;
+use Z;
+use Zls\Unit\Utils;
 
 class ExampleTest extends BaseTestCase
 {
+    use Utils;
+
     /**
      * More information available here: https://phpunit.readthedocs.io/zh_CN/latest/assertions.html
      */
     public function testBool()
     {
-        $this->assertEquals("hello Unit", "hello Unit");
+        $this->assertEquals('zls', Z::config('ini.base.name'));
     }
 
+    public function testHttpApi()
+    {
+        // $this->command('migration r -t 0');
+        // $this->command('migration m ');
+        $this->post('/index.go');
+        // $arr = $this->jsonToArr();
+        $code = $this->code();
+        $this->assertStringContainsString(200, $code);
+    }
 }

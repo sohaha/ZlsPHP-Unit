@@ -4,4 +4,4 @@ error_reporting(-1);
 ini_set('xdebug.max_nesting_level', '250');
 ini_set('memory_limit', '512M');
 defined('ZLS_RUN_MODE_CLI') || define('ZLS_RUN_MODE_CLI', false);
-include_once __DIR__ . "/../public/index.php";
+include_once __DIR__ . '/../public/index.php';
