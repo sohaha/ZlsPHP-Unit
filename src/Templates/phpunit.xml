@@ -25,5 +25,6 @@
   <php>
     <ini name="error_log" value="phpunit_test.log"/>
     <const name="ZLS_UNIT" value="true"/>
+    <const name="TEST_HOST" value="http://127.0.0.1:3780"/>
   </php>
 </phpunit>
