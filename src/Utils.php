@@ -18,6 +18,35 @@ trait Utils
     public function __construct()
     {
         parent::__construct();
+        $this->initUtils();
+    }
+
+    public function log($_)
+    {
+        $log = '';
+        if (is_array($_)) {
+            foreach ($_ as $key => $value) {
+                try {
+                    $value = is_string($value) ? $value : var_export($value, true);
+                } catch (\Exception $e) {
+                    $value = is_string($value) ? $value : print_r($value, true);
+                }
+                $log .= $key . ' : ' . $value . PHP_EOL;
+            }
+        } else {
+            $log = print_r($_, true);
+        }
+        $trace        = debug_backtrace();
+        $filepath     = Z::arrayGet($trace, '0.class');
+        $line         = Z::arrayGet($trace, '0.line');
+        $functionName = Z::arrayGet($trace, '1.function');
+        $log          = $this->color($filepath . "@" . $functionName . '::' . $line . "\n", 'dark_gray');
+        $log          = $log . $_ . PHP_EOL . PHP_EOL;
+        fwrite(STDERR, $log);
+    }
+
+    public function initUtils()
+    {
         $this->initColor();
         $this->http = new Http();
     }
@@ -72,6 +101,7 @@ trait Utils
         if (!Z::checkValue($url, 'url')) {
             $url = TEST_HOST . $url;
         }
+
         return Z::tap($this->result($this->http->request($type, $url, $data, $header, 0, null, true, $atUpload)), function ($res) {
 
         });
