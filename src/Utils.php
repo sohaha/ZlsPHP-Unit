@@ -12,6 +12,7 @@ defined('TEST_HOST') || define('TEST_HOST', 'http://127.0.0.1:3780');
 trait Utils
 {
     use log;
+    /** @var \Zls\Action\Http */
     public $http;
     public $res;
 
@@ -109,9 +110,10 @@ trait Utils
 
     private function result($res)
     {
+        $info = $this->http->info();
+        $url  = Z::arrayGet($info, 'url');
         if ($this->http->errorCode() !== 0) {
-            $info = $this->http->info();
-            if (TEST_HOST && Z::strBeginsWith(Z::arrayGet($info, 'url'), TEST_HOST)) {
+            if (TEST_HOST && Z::strBeginsWith($url, TEST_HOST)) {
                 $parse = parse_url(TEST_HOST);
                 $this->printStrN();
                 $this->error('Please start service( ' . TEST_HOST . ' ) first,execute the test');
@@ -126,6 +128,15 @@ trait Utils
             $this->error($this->http->errorMsg());
 
             return "";
+        }
+        $json = @json_decode($res, true);
+        if ($json) {
+            if (Z::config()->getShowError() && Z::arrayGet($json, 'code') === 0 && Z::arrayGet($json, 'type') === 'Error') {
+                $this->printStrN("\n");
+                $this->error($url);
+                $this->printStrN(Z::arrayGet($json, 'msg'));
+                $this->printStrN();
+            }
         }
 
         return $res;
