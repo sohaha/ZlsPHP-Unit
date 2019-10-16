@@ -131,7 +131,8 @@ trait Utils
         }
         $json = @json_decode($res, true);
         if ($json) {
-            if (Z::config()->getShowError() && Z::arrayGet($json, 'code') === 0 && Z::arrayGet($json, 'type') === 'Error') {
+            $isError = array_key_exists('file', $json) && array_key_exists('line', $json) && array_key_exists('errorCode', $json);
+            if (Z::config()->getShowError() && Z::arrayGet($json, 'code') === 0 && $isError) {
                 $this->printStrN("\n");
                 $this->error($url);
                 $this->printStrN(Z::arrayGet($json, 'msg'));
